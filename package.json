@@ -1,0 +1,29 @@
+{
+  "name": "bit_builder_server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.4",
+    "express": "^5.2.1",
+    "mongodb": "^7.1.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HasinIshrakK/bit_builder_server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/HasinIshrakK/bit_builder_server/issues"
+  },
+  "homepage": "https://github.com/HasinIshrakK/bit_builder_server#readme",
+  "description": ""
+}

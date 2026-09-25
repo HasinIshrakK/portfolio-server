@@ -23,19 +23,41 @@ const client = new MongoClient(uri, {
   },
 });
 
-let db, membersCollection, projectsCollection;
+let db, aboutInfo, projectsCollection, certificatessCollection;
 async function run() {
   // await client.connect();
 
-  db = client.db("bit_builder");
-  membersCollection = db.collection("members");
-  projectsCollection = db.collection("my-projects");
+  db = client.db("portfolio");
+  aboutInfo = db.collection("about");
+  projectsCollection = db.collection("projects");
+  certificatessCollection = db.collection("certificates");
 
-  app.get("/members/:id", async (req, res) => {
-    const id = req.params.id;
-    const query = { _id: new ObjectId(id) };
-    const result = await membersCollection.findOne(query);
-    res.send(result);
+  app.get("/about-me", async (req, res) => {
+    try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 6;
+      const sortBy = req.query.sortBy || "name";
+      const order = req.query.order === "desc" ? -1 : 1;
+
+      const skip = (page - 1) * limit;
+      const about = await aboutInfo
+        .find()
+        .sort({ [sortBy]: order })
+        .skip(skip)
+        .limit(limit)
+        .toArray();
+
+      const total = await aboutInfo.countDocuments();
+
+      res.send({
+        data: about,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+      });
+    } catch (error) {
+      res.status(500).send({ message: "Server error" });
+    }
   });
 
   app.get("/my-projects", async (req, res) => {
@@ -71,6 +93,34 @@ async function run() {
     const query = { _id: new ObjectId(id) };
     const result = await projectsCollection.findOne(query);
     res.send(result);
+  });
+
+  app.get("/my-certificates", async (req, res) => {
+    try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 6;
+      const sortBy = req.query.sortBy || "name";
+      const order = req.query.order === "desc" ? -1 : 1;
+
+      const skip = (page - 1) * limit;
+      const certificates = await certificatessCollection
+        .find()
+        .sort({ [sortBy]: order })
+        .skip(skip)
+        .limit(limit)
+        .toArray();
+
+      const total = await certificatessCollection.countDocuments();
+
+      res.send({
+        data: certificates,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+      });
+    } catch (error) {
+      res.status(500).send({ message: "Server error" });
+    }
   });
 }
 
